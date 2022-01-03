@@ -190,6 +190,16 @@ class otp_auth_atm:
         expression = str(self.screen_ent2_var.get())
         expression = expression + str(num)
         self.screen_ent2_var.set(expression)
+    
+    def clear(self):
+        self.screen_ent2_var.set('')
+    
+    def cancel(self):
+        pass
+    
+    def enter(self):
+        pass
+        
         
 
 if __name__ == "__main__":
