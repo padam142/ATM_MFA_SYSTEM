@@ -79,6 +79,56 @@ class otp_auth_atm:
         # Button 03 - Top Screen Right - 3
         self.Button03 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
         self.Button03.place(relx=0.88, rely=0.200, height=24, width=27)
+        
+        # Button 001 - Keypad numbers
+        self.button001 = ttk.Button(self.frame9, text="1")
+        self.button001.place(relx=0.050, rely=0.030, height=35, width=46)
+
+        # Button 002 - Keypad numbers
+        self.button002 = ttk.Button(self.frame9, text="2")
+        self.button002.place(relx=0.270, rely=0.030, height=35, width=46)
+
+        # Button 003 - Keypad numbers
+        self.button003 = ttk.Button(self.frame9, text="3")
+        self.button003.place(relx=0.490, rely=0.030, height=35, width=46)
+
+        # Button 004 - Keypad numbers
+        self.button004 = ttk.Button(self.frame9, text="4")
+        self.button004.place(relx=0.050, rely=0.260, height=35, width=46)
+
+        # Button 005 - Keypad numbers
+        self.button005 = ttk.Button(self.frame9, text="5")
+        self.button005.place(relx=0.270, rely=0.260, height=35, width=46)
+
+        # Button 006 - Keypad numbers
+        self.button006 = ttk.Button(self.frame9, text="6")
+        self.button006.place(relx=0.490, rely=0.260, height=35, width=46)
+
+        # Button 007 - Keypad numbers
+        self.button007 = ttk.Button(self.frame9, text="7")
+        self.button007.place(relx=0.050, rely=0.500, height=35, width=46)
+
+        # Button 008 - Keypad numbers
+        self.button008 = ttk.Button(self.frame9, text="8")
+        self.button008.place(relx=0.270, rely=0.500, height=35, width=46)
+
+        # Button 009 - Keypad numbers
+        self.button009 = ttk.Button(self.frame9, text="9")
+        self.button009.place(relx=0.490, rely=0.500, height=35, width=46)
+
+        # Button 010 - Keypad numbers
+        self.button010 = ttk.Button(self.frame9, text=" ")
+        self.button010.place(relx=0.050, rely=0.740, height=35, width=46)
+
+        # Button 000 - Keypad numbers
+        self.button000 = ttk.Button(self.frame9, text="0")
+        self.button000.place(relx=0.270, rely=0.740, height=35, width=46)
+
+        # Button 011 - Keypad numbers
+        self.button011 = ttk.Button(self.frame9, text=" ")
+        self.button011.place(relx=0.490, rely=0.740, height=35, width=46)
+
+        
 
 if __name__ == "__main__":
     window = Tk()
