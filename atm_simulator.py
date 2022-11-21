@@ -128,7 +128,40 @@ class otp_auth_atm:
         self.button011 = ttk.Button(self.frame9, text=" ")
         self.button011.place(relx=0.490, rely=0.740, height=35, width=46)
 
-        
+        # Button 012 - Cancel
+        self.button012 = Button(self.frame9, background="#feb4b1", borderwidth=0, text="Cancel")
+        self.button012.place(relx=0.734, rely=0.060, height=34, width=47)
+
+        # Button 013 - Clear
+        self.button013 = Button(self.frame9, background='#eaf1be', borderwidth=0, text='Clear')
+        self.button013.place(relx=0.729, rely=0.350, height=34, width=47)
+
+        # Button 014 - Enter
+        self.button014 = Button(self.frame9, background="#89da87", borderwidth=0, text='Enter',
+                                )
+        self.button014.place(relx=0.734, rely=0.660, height=34, width=47)
+
+        # Frame 10 - Bill Out - Outside
+        self.frame10 = Frame(window, borderwidth="2", background="#d9d9d9", relief='groove')
+        self.frame10.place(relx=0.204, rely=0.428, relheight=0.046, relwidth=0.197)
+
+        # Frame 11 - Bill Out - Inside
+        self.frame11 = Frame(self.frame10, relief='groove', background='#68979b')
+        self.frame11.place(relx=0.211, rely=0.446, relheight=0.007
+                           , relwidth=0.550)
+
+        # Frame 12 - Cash in
+        self.frame12 = Frame(self.frame7, relief='groove', borderwidth=2, background="#d9d9d9")
+        self.frame12.place(relx=0.614, rely=0.756, relheight=0.111, relwidth=0.231)
+
+        # Button 015 - Card In
+        self.button015 = ttk.Button(self.frame12, text='CARD')
+        self.button015.place(relx=0.200, rely=0.010, relheight=0.970
+                             , relwidth=0.642)
+
+        # Screen
+        self.label = Label(self.frame8, text="* PADAM BANK *", font="times 12", relief='groove', foreground="red")
+        self.label.pack()
 
 if __name__ == "__main__":
     window = Tk()
