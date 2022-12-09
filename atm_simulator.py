@@ -163,6 +163,29 @@ class otp_auth_atm:
         self.label = Label(self.frame8, text="* PADAM BANK *", font="times 12", relief='groove', foreground="red")
         self.label.pack()
 
+        self.screen_ent1_var = StringVar()
+        self.screen_ent1 = Entry(self.frame8, state='readonly', relief='groove', borderwidth=2, font="times 12",
+                                 justify='center',
+                                 textvariable=self.screen_ent1_var)
+        self.screen_ent1.place(relx=0.050, rely=0.210, relheight=0.200
+                               , relwidth=0.900)
+        self.screen_ent1_var.set('Welcome')
+
+        self.screen_ent2_var = StringVar()
+        self.screen_ent2 = Entry(self.frame8, state='readonly', readonlybackground='white', font="times 10",
+                                 justify='center', relief='groove', borderwidth=2, textvariable=self.screen_ent2_var)
+        self.screen_ent2.place(relx=0.050, rely=0.480, relheight=0.200
+                               , relwidth=0.900)
+        self.screen_ent2_var.set('Please insert your card !')
+
+        self.screen_ent3_var = StringVar()
+        self.screen_ent3 = Entry(self.frame8, state='readonly', foreground="red", font="times 10", justify='center',
+                                 relief='groove', borderwidth=2,
+                                 textvariable=self.screen_ent3_var)
+        self.screen_ent3_var.set('Inquire | Withdraw | Change')
+        self.screen_ent3.place(relx=0.050, rely=0.770, relheight=0.200
+                               , relwidth=0.900)
+
 if __name__ == "__main__":
     window = Tk()
     otp_auth_atm(window)
