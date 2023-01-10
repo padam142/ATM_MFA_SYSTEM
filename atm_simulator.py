@@ -1,8 +1,15 @@
-from tkinter import * 
+from tkinter import *
+import random
 from tkinter import ttk
+
 
 class otp_auth_atm:
     def __init__(self, window):
+        self.data = []
+        self.otp_verified = False
+        self.otp_generated = False
+        self.check_pin = False
+        self.card_in_stat = False
         window.geometry("380x538+812+80")
         window.resizable(0, 0)
         window.configure(background="#0dd754")
@@ -79,41 +86,41 @@ class otp_auth_atm:
         # Button 03 - Top Screen Right - 3
         self.Button03 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
         self.Button03.place(relx=0.88, rely=0.200, height=24, width=27)
-        
+
         # Button 001 - Keypad numbers
         self.button001 = ttk.Button(self.frame9, text="1", command=lambda: self.press('1'))
         self.button001.place(relx=0.050, rely=0.030, height=35, width=46)
 
         # Button 002 - Keypad numbers
-        self.button002 = ttk.Button(self.frame9, text="2",command=lambda: self.press('2'))
+        self.button002 = ttk.Button(self.frame9, text="2", command=lambda: self.press('2'))
         self.button002.place(relx=0.270, rely=0.030, height=35, width=46)
 
         # Button 003 - Keypad numbers
-        self.button003 = ttk.Button(self.frame9, text="3",command=lambda: self.press('3'))
+        self.button003 = ttk.Button(self.frame9, text="3", command=lambda: self.press('3'))
         self.button003.place(relx=0.490, rely=0.030, height=35, width=46)
 
         # Button 004 - Keypad numbers
-        self.button004 = ttk.Button(self.frame9, text="4",command=lambda: self.press('4'))
+        self.button004 = ttk.Button(self.frame9, text="4", command=lambda: self.press('4'))
         self.button004.place(relx=0.050, rely=0.260, height=35, width=46)
 
         # Button 005 - Keypad numbers
-        self.button005 = ttk.Button(self.frame9, text="5",command=lambda: self.press('5'))
+        self.button005 = ttk.Button(self.frame9, text="5", command=lambda: self.press('5'))
         self.button005.place(relx=0.270, rely=0.260, height=35, width=46)
 
         # Button 006 - Keypad numbers
-        self.button006 = ttk.Button(self.frame9, text="6",command=lambda: self.press('6'))
+        self.button006 = ttk.Button(self.frame9, text="6", command=lambda: self.press('6'))
         self.button006.place(relx=0.490, rely=0.260, height=35, width=46)
 
         # Button 007 - Keypad numbers
-        self.button007 = ttk.Button(self.frame9, text="7",command=lambda: self.press('7'))
+        self.button007 = ttk.Button(self.frame9, text="7", command=lambda: self.press('7'))
         self.button007.place(relx=0.050, rely=0.500, height=35, width=46)
 
         # Button 008 - Keypad numbers
-        self.button008 = ttk.Button(self.frame9, text="8",command=lambda: self.press('8'))
+        self.button008 = ttk.Button(self.frame9, text="8", command=lambda: self.press('8'))
         self.button008.place(relx=0.270, rely=0.500, height=35, width=46)
 
         # Button 009 - Keypad numbers
-        self.button009 = ttk.Button(self.frame9, text="9",command=lambda: self.press('9'))
+        self.button009 = ttk.Button(self.frame9, text="9", command=lambda: self.press('9'))
         self.button009.place(relx=0.490, rely=0.500, height=35, width=46)
 
         # Button 010 - Keypad numbers
@@ -121,7 +128,7 @@ class otp_auth_atm:
         self.button010.place(relx=0.050, rely=0.740, height=35, width=46)
 
         # Button 000 - Keypad numbers
-        self.button000 = ttk.Button(self.frame9, text="0",command=lambda: self.press('0'))
+        self.button000 = ttk.Button(self.frame9, text="0", command=lambda: self.press('0'))
         self.button000.place(relx=0.270, rely=0.740, height=35, width=46)
 
         # Button 011 - Keypad numbers
@@ -129,16 +136,16 @@ class otp_auth_atm:
         self.button011.place(relx=0.490, rely=0.740, height=35, width=46)
 
         # Button 012 - Cancel
-        self.button012 = Button(self.frame9, background="#feb4b1", borderwidth=0, text="Cancel")
+        self.button012 = Button(self.frame9, background="#feb4b1", borderwidth=0, text="Cancel", command=self.cancel)
         self.button012.place(relx=0.734, rely=0.060, height=34, width=47)
 
         # Button 013 - Clear
-        self.button013 = Button(self.frame9, background='#eaf1be', borderwidth=0, text='Clear')
+        self.button013 = Button(self.frame9, background='#eaf1be', borderwidth=0, text='Clear', command=self.clear)
         self.button013.place(relx=0.729, rely=0.350, height=34, width=47)
 
         # Button 014 - Enter
         self.button014 = Button(self.frame9, background="#89da87", borderwidth=0, text='Enter',
-                                )
+                                command=self.pin_auth_check)
         self.button014.place(relx=0.734, rely=0.660, height=34, width=47)
 
         # Frame 10 - Bill Out - Outside
@@ -155,7 +162,7 @@ class otp_auth_atm:
         self.frame12.place(relx=0.614, rely=0.756, relheight=0.111, relwidth=0.231)
 
         # Button 015 - Card In
-        self.button015 = ttk.Button(self.frame12, text='CARD')
+        self.button015 = ttk.Button(self.frame12, text='CARD', command=self.card_in)
         self.button015.place(relx=0.200, rely=0.010, relheight=0.970
                              , relwidth=0.642)
 
@@ -176,7 +183,7 @@ class otp_auth_atm:
                                  justify='center', relief='groove', borderwidth=2, textvariable=self.screen_ent2_var)
         self.screen_ent2.place(relx=0.050, rely=0.480, relheight=0.200
                                , relwidth=0.900)
-        self.screen_ent2_var.set('')
+        self.screen_ent2_var.set('Please insert your card !')
 
         self.screen_ent3_var = StringVar()
         self.screen_ent3 = Entry(self.frame8, state='readonly', foreground="red", font="times 10", justify='center',
@@ -185,24 +192,106 @@ class otp_auth_atm:
         self.screen_ent3_var.set('Inquire | Withdraw | Change')
         self.screen_ent3.place(relx=0.050, rely=0.770, relheight=0.200
                                , relwidth=0.900)
-        
-    def press(self, num):
-        expression = str(self.screen_ent2_var.get())
-        expression = expression + str(num)
-        self.screen_ent2_var.set(expression)
-    
-    def clear(self):
+
+    def card_in(self):
+        name = "Padam Khadka"
+        account_no = "1234567890123456"
+        self.card_in_stat = True
+        self.button015.config(state='disabled')
+        self.screen_ent2.config(show='*')
+        self.screen_ent1_var.set("Enter your pin:")
         self.screen_ent2_var.set('')
-    
+        self.screen_ent3_var.set(f'Welcome, {account_no}')
+
     def cancel(self):
-        pass
-    
-    def enter(self):
-        pass
-        
-        
+        self.button015.config(state='enabled')
+        self.card_in_stat = False
+        self.screen_ent2_var.set('Please insert your card !')
+        self.screen_ent1_var.set('Welcome')
+        self.screen_ent3_var.set('Inquire | Withdraw | Change')
+        self.screen_ent2.config(show='')
+        self.screen_ent3.config(foreground="red")
+        if self.check_pin:
+            self.button014.config(command=self.pin_auth_check)
+
+        if self.otp_verified:
+            self.otp_verified = False
+
+    def press(self, num):
+        if self.card_in_stat and self.otp_verified == False:
+            expression = str(self.screen_ent2_var.get())
+            expression = expression + str(num)
+            self.screen_ent2_var.set(expression)
+
+    def clear(self):
+        if self.card_in_stat and not self.otp_verified:
+            self.screen_ent2_var.set('')
+
+    def pin_auth_check(self):
+        if self.card_in_stat and not self.otp_verified:
+            pin_entered = str(self.screen_ent2_var.get())
+            pin_stored = "1234"
+
+            if pin_entered == str(pin_stored):
+                self.check_pin = True
+                otp = random.randint(1000, 9999)
+                self.otp_generated = str(otp)
+                print(otp)
+                self.screen_ent1_var.set('ENTER OTP:')
+                self.screen_ent2_var.set('')
+                self.screen_ent3_var.set('OTP SENT TO YOUR PHONE')
+                self.button014.config(command=self.otp_auth)
+            else:
+                self.screen_ent2_var.set('')
+                self.screen_ent3_var.set('Wrong PIN, Please Try Again')
+
+    def cash_checkout(self):
+        if self.card_in_stat and self.otp_verified:
+            self.otp_verified = False
+            self.screen_ent2_var.set('')
+            self.screen_ent1_var.set('Enter Amount:')
+            self.screen_ent3_var.set('Amount Withdraw')
+            self.button014.config(command=self.amount_withdraw)
+
+    def amount_withdraw(self):
+        amount = self.screen_ent2_var.get()
+        balance = self.data[0][4]
+        try:
+            balance = int(balance)
+            amount = int(amount)
+            if amount > balance:
+                self.screen_ent3_var.set('Insufficient Balance')
+            else:
+                withdraw = balance - amount
+                print(withdraw)
+                self.otp_verified = False
+                self.screen_ent1_var.set('Thank you')
+                self.screen_ent3_var.set('withdraw successful')
+                self.screen_ent2_var.set('')
+                # self.cancel()
+
+        except Exception:
+            self.screen_ent3_var.set('Invalid amount')
+
+    def otp_auth(self):
+        otp_entered = self.screen_ent2_var.get()
+        if otp_entered == self.otp_generated:
+            self.otp_verified = True
+            self.button014.config(command='')
+            self.screen_ent3.config(foreground="black")
+            self.screen_ent1_var.set('Balance Enquiry')
+            self.screen_ent2_var.set('Withdraw Amount')
+            self.screen_ent3_var.set('Change Pin')
+            self.screen_ent2.config(show='')
+        else:
+            self.screen_ent2_var.set('')
+            self.screen_ent3_var.set('Wrong PIN, Please Try Again')
+
 
 if __name__ == "__main__":
     window = Tk()
+    # MySQL connection
+
+    window.title("OTP EMBEDDED ATM")
     otp_auth_atm(window)
     window.mainloop()
