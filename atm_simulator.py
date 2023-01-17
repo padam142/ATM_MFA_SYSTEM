@@ -1,14 +1,16 @@
 from tkinter import *
 import random
+import mysql.connector
 from tkinter import ttk
 
 
 class otp_auth_atm:
-    def __init__(self, window):
+    def __init__(self, window, mydb):
         self.data = []
         self.otp_verified = False
         self.otp_generated = False
         self.check_pin = False
+        self.cursor = mydb.cursor()
         self.card_in_stat = False
         window.geometry("380x538+812+80")
         window.resizable(0, 0)
@@ -64,27 +66,27 @@ class otp_auth_atm:
         self.frame1.place(relx=-0.003, rely=0.786, relheight=0.214, relwidth=1.011)
 
         # Button 1 - Top Screen Left - 1
-        self.button1 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
+        self.button1 = Button(self.frame7, background="#d9d9d9", borderwidth=0, command=self.balance_eq)
         self.button1.place(relx=0.049, rely=0.20, height=24, width=27)
 
         # Button 2 - Top Screen Left - 2
-        self.button2 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
+        self.button2 = Button(self.frame7, background="#d9d9d9", borderwidth=0, command=self.cash_checkout)
         self.button2.place(relx=0.049, rely=0.400, height=24, width=27)
 
         # Button 3 - Top Screen Left - 3
-        self.button3 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
+        self.button3 = Button(self.frame7, background="#d9d9d9", borderwidth=0, command=self.pin_change)
         self.button3.place(relx=0.049, rely=0.600, height=24, width=27)
 
         # Button 01 - Top Screen Right - 1
-        self.Button01 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
+        self.Button01 = Button(self.frame7, background="#d9d9d9", borderwidth=0, command=self.pin_change)
         self.Button01.place(relx=0.88, rely=0.600, height=24, width=27)
 
         # Button 02 - Top Screen Right - 2
-        self.Button02 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
+        self.Button02 = Button(self.frame7, background="#d9d9d9", borderwidth=0, command=self.cash_checkout)
         self.Button02.place(relx=0.88, rely=0.400, height=24, width=27)
 
         # Button 03 - Top Screen Right - 3
-        self.Button03 = Button(self.frame7, background="#d9d9d9", borderwidth=0)
+        self.Button03 = Button(self.frame7, background="#d9d9d9", borderwidth=0, command=self.balance_eq)
         self.Button03.place(relx=0.88, rely=0.200, height=24, width=27)
 
         # Button 001 - Keypad numbers
@@ -194,8 +196,13 @@ class otp_auth_atm:
                                , relwidth=0.900)
 
     def card_in(self):
-        name = "Padam Khadka"
-        account_no = "1234567890123456"
+        self.cursor.execute('select * from card_info')
+        data = self.cursor.fetchall()
+        for i in data:
+            self.data.append(i)
+        name = self.data[0][1]
+        account_no = self.data[0][2]
+        mydb.commit()
         self.card_in_stat = True
         self.button015.config(state='disabled')
         self.screen_ent2.config(show='*')
@@ -229,8 +236,16 @@ class otp_auth_atm:
 
     def pin_auth_check(self):
         if self.card_in_stat and not self.otp_verified:
+            self.data = []
+            self.cursor.execute('select * from card_info')
+            data = self.cursor.fetchall()
+            for i in data:
+                self.data.append(i)
             pin_entered = str(self.screen_ent2_var.get())
-            pin_stored = "1234"
+            pin_stored = str(self.data[0][3])
+
+            # with open('pin_store', 'r') as f:
+            #     pin_stored = f.readline()
 
             if pin_entered == str(pin_stored):
                 self.check_pin = True
@@ -256,6 +271,8 @@ class otp_auth_atm:
     def amount_withdraw(self):
         amount = self.screen_ent2_var.get()
         balance = self.data[0][4]
+        # with open('balance', 'r') as f:
+        #     balance = f.readline()
         try:
             balance = int(balance)
             amount = int(amount)
@@ -263,7 +280,10 @@ class otp_auth_atm:
                 self.screen_ent3_var.set('Insufficient Balance')
             else:
                 withdraw = balance - amount
-                print(withdraw)
+                # with open('balance', 'w') as f:
+                #     f.write(str(withdraw))
+                self.cursor.execute(f'update card_info set balance={withdraw} where id = 1')
+                mydb.commit()
                 self.otp_verified = False
                 self.screen_ent1_var.set('Thank you')
                 self.screen_ent3_var.set('withdraw successful')
@@ -287,11 +307,52 @@ class otp_auth_atm:
             self.screen_ent2_var.set('')
             self.screen_ent3_var.set('Wrong PIN, Please Try Again')
 
+    def balance_eq(self):
+        if self.card_in_stat and self.otp_verified:
+            self.data = []
+            self.cursor.execute('select * from card_info')
+            data = self.cursor.fetchall()
+            for i in data:
+                self.data.append(i)
+
+            self.screen_ent1_var.set('Your Current Balance:')
+            balance = self.data[0][4]
+            # with open('balance', 'r') as f:
+            #     balance = str(f.readline())
+            self.screen_ent2_var.set(balance)
+            self.screen_ent3_var.set('')
+
+    def pin_change(self):
+        if self.card_in_stat and self.otp_verified:
+            self.screen_ent1_var.set('Enter New Pin:')
+            self.otp_verified = False
+            self.screen_ent2_var.set('')
+            self.screen_ent2.config(show="*")
+            self.button014.config(command=self.change_pin)
+
+    def change_pin(self):
+        new_pin = self.screen_ent2_var.get()
+        if len(new_pin) == 4:
+
+            self.cursor.execute(f'update card_info set pin={new_pin} where id = 1')
+            mydb.commit()
+            # with open('pin_store', 'w') as f:
+            #     f.write(str(new_pin))
+
+            self.screen_ent3_var.set('Change Successful')
+            self.screen_ent2_var.set('')
+        else:
+            self.screen_ent3_var.set('Invalid Pin')
+
 
 if __name__ == "__main__":
     window = Tk()
     # MySQL connection
+    mydb = mysql.connector.connect(user='atm_auth',
+                                   host='localhost',
+                                   password='12345',
+                                   database='atm_auth')
 
     window.title("OTP EMBEDDED ATM")
-    otp_auth_atm(window)
+    otp_auth_atm(window, mydb)
     window.mainloop()
