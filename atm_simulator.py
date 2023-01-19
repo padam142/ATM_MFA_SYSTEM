@@ -2,6 +2,7 @@ from tkinter import *
 import random
 import mysql.connector
 from tkinter import ttk
+from twilio.rest import Client
 
 
 class otp_auth_atm:
@@ -252,6 +253,13 @@ class otp_auth_atm:
                 otp = random.randint(1000, 9999)
                 self.otp_generated = str(otp)
                 print(otp)
+                # client = Client('ACef2589c0c7d896b8e5ef9b40e29dc5af', 'be04280477bcaaacfd2150e366bb3a9d')
+                # message = client.messages \
+                #     .create(
+                #     body=f"OTP CODE: {self.otp_generated}",
+                #     from_='+14439513220',
+                #     to='+9779818156440'
+                # )
                 self.screen_ent1_var.set('ENTER OTP:')
                 self.screen_ent2_var.set('')
                 self.screen_ent3_var.set('OTP SENT TO YOUR PHONE')
