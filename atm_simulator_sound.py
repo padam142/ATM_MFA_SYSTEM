@@ -324,6 +324,7 @@ class otp_auth_atm:
 
     def balance_eq(self):
         if self.card_in_stat and self.otp_verified:
+            self.otp_verified = False
             self.data = []
             self.cursor.execute('select * from card_info')
             data = self.cursor.fetchall()
